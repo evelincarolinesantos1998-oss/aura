@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AURA Finanças - Ultra Responsivo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-bg: #f1f5f9; --card-bg: #ffffff; --text-color: #0f172a;
+            --header-bg: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+            --table-border: #e2e8f0; --section-bg: #f8fafc; --input-bg: #ffffff;
+            --input-border: #cbd5e1; --accent: #3b82f6; --income: #10b981;
+            --expense: #ef4444; --invest: #8b5cf6; --gold: #fbbf24; --navy: #1e293b;
+        }
+
+        [data-theme="dark"] {
+            --primary-bg: #0f172a; --card-bg: #1e293b; --text-color: #f1f5f9;
+            --table-border: #334155; --section-bg: #1e293b; --input-bg: #334155; --input-border: #475569;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--primary-bg); color: var(--text-color); padding-bottom: 30px; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: auto; padding: 0 10px; }
+
+        /* HEADER RESPONSIVO */
+        .aura-header {
+            width: 100%;
+            background: var(--header-bg);
+            padding: 30px 15px;
+            text-align: center;
+            border-bottom: 3px solid var(--gold);
+            margin-bottom: 20px;
+        }
+        .brand-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #ffffff 40%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand-subtitle { font-size: clamp(0.6rem, 2vw, 0.9rem); text-transform: uppercase; letter-spacing: 3px; color: var(--gold); font-weight: 600; margin-top: 5px; }
+
+        .btn-group-header { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+        .btn { padding: 12px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; text-transform: uppercase; transition: transform 0.1s; }
+        .btn:active { transform: scale(0.95); }
+        .btn-save { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        
+        /* WIDGETS FLEXÍVEIS */
+        .grid-widgets { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        .widget { padding: 15px; border-radius: 12px; color: white; text-align: center; }
+        .w-passive { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .w-alert { background: var(--card-bg); border: 2px solid var(--table-border); color: var(--text-color); }
+        .widget h2 { font-size: clamp(1.1rem, 4vw, 1.8rem); margin-top: 5px; }
+
+        /* CARDS */
+        .card { background: var(--card-bg); padding: 15px; border-radius: 15px; border: 1px solid var(--table-border); margin-bottom: 15px; }
+        
+        /* FORMULÁRIO DE LANÇAMENTO RESPONSIVO */
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 600px) { .form-grid { grid-template-columns: 2fr 1fr 1fr 1fr; align-items: flex-end; } }
+
+        /* TABELA COM SCROLL */
+        .table-wrapper { overflow-x: auto; border-radius: 10px; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th, td { border: 1px solid var(--table-border); padding: 10px; text-align: center; font-size: 0.75rem; }
+        .row-label { text-align: left; font-weight: 700; min-width: 140px; position: sticky; left: 0; background: var(--card-bg); z-index: 5; border-right: 2px solid var(--table-border); }
+        
+        input, select { background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-color); padding: 12px; border-radius: 8px; font-size: 0.9rem; width: 100%; }
+        input.input-cell { border: none; text-align: center; background: transparent; padding: 5px; }
+
+        /* CALCULADORAS RESPONSIVAS */
+        .calc-ultra { background: var(--navy); color: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
+        .calc-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 600px) { .calc-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); } }
+        
+        .projection-results { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
+        @media (min-width: 600px) { .projection-results { grid-template-columns: repeat(4, 1fr); } }
+        
+        .proj-card { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; border: 1px solid #475569; text-align: center; }
+        .proj-card span { display: block; font-size: 0.85rem; font-weight: 800; color: var(--gold); margin-top: 4px; }
+        .proj-main { border-color: var(--gold); background: rgba(251, 191, 36, 0.1); }
+
+        /* INFORME PDF STYLE */
+        #informe-print { display: none; }
+        @media print { 
+            .no-print { display: none !important; } 
+            #informe-print { display: block !important; padding: 20px; color: black; background: white; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="informe-print">
+        <h1 style="border-bottom: 2px solid #000;">AURA - Informe de Rendimentos</h1>
+        <p>Data: <span id="inf-data"></span></p><br>
+        <h3>Total Investido: <span id="inf-total"></span></h3>
+        <h3>Renda Passiva Mensal: <span id="inf-passiva"></span></h3>
+    </div>
+
+    <header class="aura-header no-print">
+        <div class="brand-title">AURA</div>
+        <div class="brand-subtitle">Engenharia Financeira Inteligente</div>
+        
+        <div class="btn-group-header">
+            <button class="btn btn-save" onclick="exportData()">💾 SALVAR</button>
+            <button class="btn" style="background:var(--gold); color:#000" onclick="window.print()">🖨️ PDF</button>
+            <button class="btn" style="background:var(--accent); color:white" onclick="prepararInforme()">📊 INFORME</button>
+            <button class="btn" style="background:white; color:#000" onclick="toggleTheme()">🌓 TEMA</button>
+        </div>
+    </header>
+
+    <div class="container no-print">
+        <div class="grid-widgets">
+            <div class="widget w-passive">
+                <p style="font-size: 0.65rem;">RENDA PASSIVA (0.8%)</p>
+                <h2 id="res-passive">R$ 0,00</h2>
+            </div>
+            <div id="budget-alert" class="widget w-alert">
+                <p style="font-size: 0.65rem;">LIMITE GASTOS</p>
+                <input type="number" id="limit-val" value="5000" oninput="updateAll()" style="background:transparent; border:none; color:inherit; font-size: 1.3rem; font-weight:800; text-align:center;">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="form-grid">
+                <div><input type="text" id="new-name" placeholder="Nome..."></div>
+                <div><select id="new-type"><option value="income">Entrada</option><option value="expense">Saída</option><option value="invest">Investimento</option></select></div>
+                <div><input type="number" id="new-val" placeholder="R$"></div>
+                <button class="btn" style="background:var(--accent); color:white; justify-content:center" onclick="addCategory()">+ LANÇAR</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Fluxo Anual</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th></tr></thead>
+                    <tbody id="group-income"><tr><td colspan="13" class="section-header" style="color:var(--income)">ENTRADAS</td></tr></tbody>
+                    <tbody id="group-expense"><tr><td colspan="13" class="section-header" style="color:var(--expense)">SAÍDAS</td></tr></tbody>
+                    <tbody id="group-invest"><tr><td colspan="13" class="section-header" style="color:var(--invest)">INVESTIMENTOS</td></tr></tbody>
+                    <tfoot>
+                        <tr style="background:var(--navy); color:white; font-weight:bold;">
+                            <td class="row-label" style="background:var(--navy); color:white;">SALDO LIVRE</td>
+                            <td id="t-0">0</td><td id="t-1">0</td><td id="t-2">0</td><td id="t-3">0</td><td id="t-4">0</td><td id="t-5">0</td>
+                            <td id="t-6">0</td><td id="t-7">0</td><td id="t-8">0</td><td id="t-9">0</td><td id="t-10">0</td><td id="t-11">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <canvas id="growthChart" height="150"></canvas>
+        </div>
+
+        <div class="calc-ultra">
+            <h2 style="color:var(--gold); font-size: 1rem; margin-bottom: 10px;">🚀 SIMULADOR DE FUTURO</h2>
+            <div class="calc-grid">
+                <div><label>Inicial</label><input type="number" id="sim-init" value="5000"></div>
+                <div><label>Aporte</label><input type="number" id="sim-month" value="1500"></div>
+                <div><label>Taxa %</label><input type="number" id="sim-rate-val" value="0.84"></div>
+                <div><label>Meses</label><input type="number" id="sim-months" value="18"></div>
+                <button class="btn" style="background:var(--gold); color:#000; justify-content:center; margin-top:10px" onclick="runUltraSim()">SIMULAR</button>
+            </div>
+            <div class="projection-results">
+                <div class="proj-card proj-main"><span id="txt-m">18</span> Meses<span id="p-m">R$ --</span></div>
+                <div class="proj-card">1 Ano<span id="p-1">R$ --</span></div>
+                <div class="proj-card">5 Anos<span id="p-5">R$ --</span></div>
+                <div class="proj-card">10 Anos<span id="p-10">R$ --</span></div>
+            </div>
+        </div>
+
+        <div class="calc-ultra" style="background: #0f172a; border: 1px solid var(--income);">
+            <h2 style="color:var(--income); font-size: 1rem; margin-bottom: 10px;">🎯 SIMULADOR DE CONQUISTA</h2>
+            <div class="calc-grid">
+                <div><label>Meta R$</label><input type="number" id="goal-val" value="50000"></div>
+                <div><label>Inicial R$</label><input type="number" id="goal-init" value="2000"></div>
+                <div><label>Mensal R$</label><input type="number" id="goal-month" value="1000"></div>
+                <div><label>Taxa %</label><input type="number" id="goal-rate-val" value="0.84"></div>
+                <button class="btn" style="background:var(--income); color:white; justify-content:center; margin-top:10px" onclick="runGoalSim()">CALCULAR</button>
+            </div>
+            <div id="goal-result-box" style="display:none; margin-top: 10px; text-align: center; color: var(--income); font-weight: 800;">
+                Tempo: <span id="res-goal-time">0 meses</span>
+            </div>
+        </div>
+    </div>
+
+<script>
+    let myChart;
+    const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+
+    function toggleTheme() {
+        const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+        localStorage.setItem('aura-theme', t);
+        updateAll();
+    }
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('aura-theme') || 'dark');
+
+    function addCategory(name, type, val) {
+        name = name || document.getElementById('new-name').value;
+        type = type || document.getElementById('new-type').value;
+        val = val || document.getElementById('new-val').value;
+        if(!name) return;
+        const tr = document.createElement('tr');
+        tr.className = `row-${type}`;
+        tr.innerHTML = `<td class="row-label"><span onclick="this.closest('tr').remove(); updateAll()" style="color:red; margin-right:5px">X</span>${name}</td>` + 
+                       Array(12).fill(0).map(() => `<td><input type="number" class="input-cell" value="${val}" oninput="updateAll()"></td>`).join('');
+        document.getElementById(`group-${type}`).appendChild(tr);
+        updateAll();
+    }
+
+    function updateAll() {
+        const rows = document.querySelectorAll('tbody tr:not(.section-header)');
+        let b = Array(12).fill(0), inv = Array(12).fill(0), exp = Array(12).fill(0);
+        rows.forEach(r => {
+            const type = r.className;
+            r.querySelectorAll('input').forEach((input, i) => {
+                const v = parseFloat(input.value) || 0;
+                if(type === 'row-income') b[i] += v;
+                if(type === 'row-expense') { b[i] -= v; exp[i] += v; }
+                if(type === 'row-invest') { b[i] -= v; inv[i] += v; }
+            });
+        });
+        const limit = parseFloat(document.getElementById('limit-val').value) || 0;
+        document.getElementById('budget-alert').className = exp.some(e => e > limit) ? 'widget w-alert alert-active' : 'widget w-alert';
+        let acc = 0, chartData = [];
+        b.forEach((val, i) => {
+            document.getElementById(`t-${i}`).innerText = val.toLocaleString('pt-br', {style:'currency', currency:'BRL'});
+            acc += inv[i]; chartData.push(acc);
+        });
+        document.getElementById('res-passive').innerText = (acc * 0.008).toLocaleString('pt-br', {style:'currency', currency:'BRL'});
+        renderChart(chartData);
+    }
+
+    function runUltraSim() {
+        const p = parseFloat(document.getElementById('sim-init').value) || 0;
+        const pmt = parseFloat(document.getElementById('sim-month').value) || 0;
+        const i = (parseFloat(document.getElementById('sim-rate-val').value) || 0) / 100;
+        const customM = parseInt(document.getElementById('sim-months').value) || 0;
+        
+        const resM = (p * Math.pow((1+i), customM)) + (pmt * ((Math.pow((1+i), customM) - 1) / i));
+        document.getElementById('p-m').innerText = resM.toLocaleString('pt-br', {style:'currency', currency:'BRL', maximumFractionDigits:0});
+        document.getElementById('txt-m').innerText = customM;
+
+        [1, 5, 10].forEach((y, idx) => {
+            const n = y * 12;
+            const res = (p * Math.pow((1+i), n)) + (pmt * ((Math.pow((1+i), n) - 1) / i));
+            document.querySelectorAll('.proj-card:not(.proj-main) span')[idx].innerText = res.toLocaleString('pt-br', {style:'currency', currency:'BRL', maximumFractionDigits:0});
+        });
+    }
+
+    function runGoalSim() {
+        const target = parseFloat(document.getElementById('goal-val').value);
+        const p = parseFloat(document.getElementById('goal-init').value);
+        const pmt = parseFloat(document.getElementById('goal-month').value);
+        const i = (parseFloat(document.getElementById('goal-rate-val').value) || 0) / 100;
+        let m = 0, curr = p;
+        while (curr < target && m < 600) { curr = (curr * (1 + i)) + pmt; m++; }
+        document.getElementById('res-goal-time').innerText = m + " meses (" + Math.floor(m/12) + " anos)";
+        document.getElementById('goal-result-box').style.display = 'block';
+    }
+
+    function renderChart(data) {
+        const ctx = document.getElementById('growthChart').getContext('2d');
+        const theme = document.documentElement.getAttribute('data-theme');
+        const color = theme === 'dark' ? '#f1f5f9' : '#0f172a';
+        if(myChart) myChart.destroy();
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: { labels: months, datasets: [{ label: 'Ativos', data: data, borderColor: '#8b5cf6', backgroundColor: 'rgba(139, 92, 246, 0.1)', fill: true, tension: 0.3 }] },
+            options: { plugins: { legend: { labels: { color: color } } }, scales: { x: { ticks: { color: color } }, y: { ticks: { color: color } } } }
+        });
+    }
+
+    function exportData() {
+        const data = [];
+        document.querySelectorAll('tbody tr:not(.section-header)').forEach(row => {
+            data.push({ name: row.querySelector('.row-label').innerText.replace('X', '').trim(), type: row.className.replace('row-', ''), vals: Array.from(row.querySelectorAll('input')).map(i => i.value) });
+        });
+        const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `aura_financas.json`; a.click();
+    }
+
+    function prepararInforme() {
+        let total = 0;
+        document.querySelectorAll('.row-invest').forEach(r => {
+            total += Array.from(r.querySelectorAll('input')).reduce((acc, curr) => acc + (parseFloat(curr.value) || 0), 0);
+        });
+        document.getElementById('inf-total').innerText = total.toLocaleString('pt-br', {style:'currency', currency:'BRL'});
+        document.getElementById('inf-passiva').innerText = (total * 0.008).toLocaleString('pt-br', {style:'currency', currency:'BRL'});
+        document.getElementById('inf-data').innerText = new Date().toLocaleDateString('pt-br');
+        window.print();
+    }
+
+    window.onload = () => { addCategory('Salário Luka', 'income', 11200); addCategory('Custo Laguna', 'expense', 4500); updateAll(); runUltraSim(); };
+</script>
+</body>
+</html>
