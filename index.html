@@ -334,11 +334,13 @@
   </style>
 </head>
 <body>
-  <body>
+  <button id="logout-btn" onclick="logout()" style="position:fixed; top:20px; right:20px; z-index:9999;">
+    Sair
+  </button>
 
-<button onclick="logout()" style="position:fixed; top:20px; right:20px;">
-  Sair
-</button>
+  <div id="plan-badge" style="position:fixed; top:20px; left:20px; z-index:9999; padding:10px 14px; border-radius:999px; font-weight:800; font-size:12px; background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,.12);">
+    Carregando plano...
+  </div>
   <div id="informe-print">
     <h1 style="border-bottom:2px solid #000; padding-bottom:8px; margin-bottom:10px;">AURA - Informe Financeiro</h1>
     <p>Data: <span id="inf-data"></span></p>
