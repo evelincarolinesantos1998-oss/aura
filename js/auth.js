@@ -1,52 +1,19 @@
-console.log('auth.js real carregou')
+// 🔥 AUTH.JS COMPLETO - AURA FINANÇAS
 
-function setMessage(text, isError = false) {
-  const msg = document.getElementById('msg')
-  if (!msg) return
-  msg.textContent = text
-  msg.style.color = isError ? '#ff9b9b' : 'yellow'
+function setMessage(msg, error = false) {
+  const el = document.getElementById('msg')
+  if (!el) return
+  el.style.color = error ? 'red' : 'lightgreen'
+  el.innerText = msg
 }
 
-window.signup = async function () {
-  const email = document.getElementById('email')?.value.trim()
-  const password = document.getElementById('password')?.value.trim()
-
-  if (!email || !password) {
-    setMessage('Preencha e-mail e senha.', true)
-    return
-  }
-
-  if (!window.supabase) {
-    setMessage('Supabase não foi carregado.', true)
-    return
-  }
-
-  const { data, error } = await window.supabase.auth.signUp({
-    email,
-    password
-  })
-
-  console.log('signup:', { data, error })
-
-  if (error) {
-    setMessage(error.message, true)
-    return
-  }
-
-  setMessage('Conta criada com sucesso. Faça login agora.')
-}
-
+// ================= LOGIN =================
 window.login = async function () {
   const email = document.getElementById('email')?.value.trim()
   const password = document.getElementById('password')?.value.trim()
 
   if (!email || !password) {
     setMessage('Preencha e-mail e senha.', true)
-    return
-  }
-
-  if (!window.supabase) {
-    setMessage('Supabase não foi carregado.', true)
     return
   }
 
@@ -63,23 +30,68 @@ window.login = async function () {
   }
 
   setMessage('Login realizado com sucesso.')
-  window.location.href = 'index.html'
+  window.location.href = '/'
 }
 
+// ================= SIGNUP =================
+window.signup = async function () {
+  const email = document.getElementById('email')?.value.trim()
+  const password = document.getElementById('password')?.value.trim()
+
+  if (!email || !password) {
+    setMessage('Preencha e-mail e senha.', true)
+    return
+  }
+
+  const { data, error } = await window.supabase.auth.signUp({
+    email,
+    password
+  })
+
+  console.log('signup:', { data, error })
+
+  if (error) {
+    setMessage(error.message, true)
+    return
+  }
+
+  // 🔥 CRIA PERFIL FREE AUTOMATICAMENTE
+  if (data.user) {
+    const { error: profileError } = await window.supabase
+      .from('profiles')
+      .insert([
+        {
+          user_id: data.user.id,
+          plano: 'free'
+        }
+      ])
+
+    console.log('profile insert:', profileError)
+  }
+
+  setMessage('Conta criada com sucesso.')
+}
+
+// ================= GOOGLE =================
 window.loginWithGoogle = async function () {
-  setMessage('Google será configurado depois.')
+  const { error } = await window.supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: 'https://aurapro.app.br/entrar.html'
+    }
+  })
+
+  if (error) {
+    setMessage(error.message, true)
+  }
 }
 
+// ================= RECUPERAR SENHA =================
 window.recoverPassword = async function () {
   const email = document.getElementById('email')?.value.trim()
 
   if (!email) {
-    setMessage('Digite seu e-mail para recuperar a senha.', true)
-    return
-  }
-
-  if (!window.supabase) {
-    setMessage('Supabase não foi carregado.', true)
+    setMessage('Digite seu e-mail primeiro.', true)
     return
   }
 
@@ -92,5 +104,5 @@ window.recoverPassword = async function () {
     return
   }
 
-  setMessage('Link de recuperação enviado para seu e-mail.')
+  setMessage('Email de recuperação enviado!')
 }
