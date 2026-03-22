@@ -1485,5 +1485,19 @@
       refreshOfficialRates(false);
     });
   </script>
+  <script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+const supabase = createClient(
+  'https://brdxiakrjriqljxivsyi.supabase.co',
+  'SUA_PUBLISHABLE_KEY_AQUI'
+)
+
+const { data } = await supabase.auth.getSession()
+
+if (!data.session) {
+  window.location.href = 'entrar.html'
+}
+</script>
 </body>
 </html>
