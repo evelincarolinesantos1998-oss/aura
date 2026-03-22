@@ -84,7 +84,7 @@ window.recoverPassword = async function () {
   }
 
   const { error } = await window.supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://aurapro.app.br/login.html'
+    redirectTo: 'https://aurapro.app.br/entrar.html'
   })
 
   if (error) {
