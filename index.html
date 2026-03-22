@@ -884,20 +884,74 @@
       scheduleSave();
     }
 
-    function addCategory(name, type, val) {
-      const resolvedName = (name ?? document.getElementById('new-name').value).trim();
-      const resolvedType = type ?? document.getElementById('new-type').value;
-      const resolvedVal = Number(val ?? document.getElementById('new-val').value) || 0;
-      if (!resolvedName) {
-        alert('Digite o nome da categoria.');
-        return;
-      }
-      createRow({ name: resolvedName, type: resolvedType, vals: Array(12).fill(resolvedVal), productKey: '' });
-      document.getElementById('new-name').value = '';
-      document.getElementById('new-val').value = '';
-      scheduleSave();
-      updateAll();
-    }
+    function getPlanLimits() {
+  if (window.currentPlan === 'pro') {
+    return {
+      maxIncome: Infinity,
+      maxExpense: Infinity,
+      maxInvest: Infinity
+    };
+  }
+
+  return {
+    maxIncome: 1,
+    maxExpense: 5,
+    maxInvest: 1
+  };
+}
+
+function getCurrentTypeCounts() {
+  const rows = getRows();
+  return {
+    income: rows.filter(row => row.dataset.type === 'income').length,
+    expense: rows.filter(row => row.dataset.type === 'expense').length,
+    invest: rows.filter(row => row.dataset.type === 'invest').length
+  };
+}
+
+function canAddCategoryByPlan(type) {
+  const limits = getPlanLimits();
+  const counts = getCurrentTypeCounts();
+
+  if (type === 'income' && counts.income >= limits.maxIncome) return false;
+  if (type === 'expense' && counts.expense >= limits.maxExpense) return false;
+  if (type === 'invest' && counts.invest >= limits.maxInvest) return false;
+
+  return true;
+}
+
+function addCategory(name, type, val) {
+  const resolvedName = (name ?? document.getElementById('new-name').value).trim();
+  const resolvedType = type ?? document.getElementById('new-type').value;
+  const resolvedVal = Number(val ?? document.getElementById('new-val').value) || 0;
+
+  if (!resolvedName) {
+    alert('Digite o nome da categoria.');
+    return;
+  }
+
+  if (!canAddCategoryByPlan(resolvedType)) {
+    const labels = {
+      income: 'entradas',
+      expense: 'saídas',
+      invest: 'investimentos'
+    };
+    alert(`Você atingiu o limite da versão FREE para ${labels[resolvedType]}. Faça upgrade para o Pro.`);
+    return;
+  }
+
+  createRow({
+    name: resolvedName,
+    type: resolvedType,
+    vals: Array(12).fill(resolvedVal),
+    productKey: ''
+  });
+
+  document.getElementById('new-name').value = '';
+  document.getElementById('new-val').value = '';
+  scheduleSave();
+  updateAll();
+}
 
     function editRowName(id) {
       const row = document.querySelector(`tr[data-id="${id}"]`);
