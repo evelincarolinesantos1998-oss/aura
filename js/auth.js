@@ -63,7 +63,7 @@ window.login = async function () {
   }
 
   setMessage('Login realizado com sucesso.')
-  window.location.href = 'app.html'
+  window.location.href = 'index.html'
 }
 
 window.loginWithGoogle = async function () {
