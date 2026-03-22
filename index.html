@@ -1505,5 +1505,19 @@ if (!data.session) {
   window.location.href = 'entrar.html'
 }
 </script>
+    <script>
+window.logout = async function () {
+  const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2')
+
+  const supabase = createClient(
+    'https://brdxiakrjriqljxivsyi.supabase.co',
+    'SUA_PUBLISHABLE_KEY_AQUI'
+  )
+
+  await supabase.auth.signOut()
+
+  window.location.href = 'entrar.html'
+}
+</script>
 </body>
 </html>
