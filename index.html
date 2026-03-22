@@ -1604,6 +1604,22 @@ function lockButton(id, title) {
 
 if (window.currentPlan === 'free') {
   lockButton('apply-suggestion-btn', 'Recurso exclusivo do plano Pro.')
+  lockButton('btn-suggest-strategy', 'Estratégia automática disponível apenas no plano Pro.')
+
+  const compareButtons = Array.from(document.querySelectorAll('button'))
+    .filter(btn => btn.textContent.includes('Comparar rendimentos'))
+
+  compareButtons.forEach(btn => {
+    btn.disabled = true
+    btn.style.opacity = '0.6'
+    btn.title = 'Comparação completa disponível apenas no plano Pro.'
+    btn.addEventListener('click', function (e) {
+      e.preventDefault()
+      e.stopPropagation()
+      alert('Comparação completa disponível apenas no plano Pro.')
+    }, true)
+  })
+}
 
   const compareButtons = Array.from(document.querySelectorAll('button'))
     .filter(btn => btn.textContent.includes('Comparar rendimentos'))
