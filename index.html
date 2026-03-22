@@ -1555,31 +1555,74 @@ const supabase = createClient(
   'sb_publishable_5Do2c9RtxKSpZmyOD0aLKQ_C_lHgyZD'
 )
 
-// 🔐 verifica login
-const { data } = await supabase.auth.getSession()
+window.supabaseClient = supabase
 
-if (!data.session) {
+const { data, error } = await supabase.auth.getSession()
+
+if (error || !data.session) {
   window.location.href = 'entrar.html'
 }
 
-// 👤 pega usuário
 const user = data.session.user
+window.currentUser = user
 
-// 🔥 busca plano no banco
-const { data: profile, error } = await supabase
+const { data: profile, error: profileError } = await supabase
   .from('profiles')
   .select('*')
   .eq('user_id', user.id)
   .single()
 
-console.log('PLANO DO USUÁRIO:', profile)
+if (profileError || !profile) {
+  console.error('Erro ao buscar profile:', profileError)
+  alert('Não foi possível carregar o plano do usuário.')
+} else {
+  window.currentPlan = profile.plano || 'free'
+}
 
-// 🧠 lógica FREE vs PRO
-if (profile.plano === 'free') {
-  console.log('Usuário FREE')
+const badge = document.getElementById('plan-badge')
+if (badge) {
+  const isPro = window.currentPlan === 'pro'
+  badge.textContent = isPro ? 'Plano PRO' : 'Plano FREE'
+  badge.style.background = isPro ? '#14532d' : '#1e293b'
+  badge.style.color = '#fff'
+}
 
-  // 👉 EXEMPLO: alerta
-  alert('Você está usando a versão FREE')
+function lockButton(id, title) {
+  const btn = document.getElementById(id)
+  if (!btn) return
+
+  btn.disabled = true
+  btn.style.opacity = '0.6'
+  btn.title = title
+
+  btn.addEventListener('click', function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+    alert(title)
+  }, true)
+}
+
+if (window.currentPlan === 'free') {
+  lockButton('apply-suggestion-btn', 'Recurso exclusivo do plano Pro.')
+
+  const compareButtons = Array.from(document.querySelectorAll('button'))
+    .filter(btn => btn.textContent.includes('Comparar rendimentos'))
+
+  compareButtons.forEach(btn => {
+    btn.disabled = true
+    btn.style.opacity = '0.6'
+    btn.title = 'Comparação completa disponível apenas no plano Pro.'
+    btn.addEventListener('click', function (e) {
+      e.preventDefault()
+      e.stopPropagation()
+      alert('Comparação completa disponível apenas no plano Pro.')
+    }, true)
+  })
+}
+
+window.logout = async function () {
+  await supabase.auth.signOut()
+  window.location.href = 'entrar.html'
 }
 </script>
 </body>
