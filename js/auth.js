@@ -1,4 +1,4 @@
-console.log('auth.js carregou')
+console.log('auth.js real carregou')
 
 function setMessage(text, isError = false) {
   const msg = document.getElementById('msg')
@@ -8,8 +8,6 @@ function setMessage(text, isError = false) {
 }
 
 window.signup = async function () {
-  console.log('Criar conta clicado')
-
   const email = document.getElementById('email')?.value.trim()
   const password = document.getElementById('password')?.value.trim()
 
@@ -28,7 +26,7 @@ window.signup = async function () {
     password
   })
 
-  console.log('Resposta signup:', { data, error })
+  console.log('signup:', { data, error })
 
   if (error) {
     setMessage(error.message, true)
@@ -39,8 +37,6 @@ window.signup = async function () {
 }
 
 window.login = async function () {
-  console.log('Entrar clicado')
-
   const email = document.getElementById('email')?.value.trim()
   const password = document.getElementById('password')?.value.trim()
 
@@ -59,7 +55,7 @@ window.login = async function () {
     password
   })
 
-  console.log('Resposta login:', { data, error })
+  console.log('login:', { data, error })
 
   if (error) {
     setMessage(error.message, true)
@@ -67,6 +63,7 @@ window.login = async function () {
   }
 
   setMessage('Login realizado com sucesso.')
+  window.location.href = 'app.html'
 }
 
 window.loginWithGoogle = async function () {
