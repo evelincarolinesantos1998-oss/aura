@@ -33,7 +33,7 @@ window.signup = async function () {
     return
   }
 
-  setMessage('Conta criada com sucesso. Agora tente entrar.')
+  setMessage('Conta criada com sucesso. Faça login agora.')
 }
 
 window.login = async function () {
