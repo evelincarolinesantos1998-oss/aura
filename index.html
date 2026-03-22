@@ -1491,32 +1491,39 @@
       refreshOfficialRates(false);
     });
   </script>
-  <script type="module">
+ <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const supabase = createClient(
   'https://brdxiakrjriqljxivsyi.supabase.co',
-  'SUA_PUBLISHABLE_KEY_AQUI'
+  'sb_publishable_5Do2c9RtxKSpZmyOD0aLKQ_C_lHgyZD'
 )
 
+// 🔐 verifica login
 const { data } = await supabase.auth.getSession()
 
 if (!data.session) {
   window.location.href = 'entrar.html'
 }
-</script>
-    <script>
-window.logout = async function () {
-  const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2')
 
-  const supabase = createClient(
-    'https://brdxiakrjriqljxivsyi.supabase.co',
-    'sb_publishable_5Do2c9RtxKSpZmyOD0aLKQ_C_lHgyZD'
-  )
+// 👤 pega usuário
+const user = data.session.user
 
-  await supabase.auth.signOut()
+// 🔥 busca plano no banco
+const { data: profile, error } = await supabase
+  .from('profiles')
+  .select('*')
+  .eq('user_id', user.id)
+  .single()
 
-  window.location.href = 'entrar.html'
+console.log('PLANO DO USUÁRIO:', profile)
+
+// 🧠 lógica FREE vs PRO
+if (profile.plano === 'free') {
+  console.log('Usuário FREE')
+
+  // 👉 EXEMPLO: alerta
+  alert('Você está usando a versão FREE')
 }
 </script>
 </body>
