@@ -1,90 +1,29 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>AURA Login</title>
+window.login = async function () {
+  const email = document.getElementById('email')?.value.trim()
+  const password = document.getElementById('password')?.value.trim()
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0b1020;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+  if (!email || !password) {
+    setMessage('Preencha e-mail e senha.', true)
+    return
+  }
 
-    .card {
-      background: #121933;
-      padding: 30px;
-      border-radius: 15px;
-      width: 350px;
-      text-align: center;
-    }
+  if (!window.supabase) {
+    setMessage('Supabase não foi carregado.', true)
+    return
+  }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 8px;
-      border: none;
-    }
+  const { data, error } = await window.supabase.auth.signInWithPassword({
+    email,
+    password
+  })
 
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+  console.log('login:', { data, error })
 
-    .btn-primary {
-      background: #6ea8fe;
-      color: #000;
-    }
+  if (error) {
+    setMessage(error.message, true)
+    return
+  }
 
-    .btn-secondary {
-      background: #1d2852;
-      color: #fff;
-    }
-
-    .btn-google {
-      background: #fff;
-      color: #000;
-    }
-
-    #msg {
-      margin-top: 10px;
-      color: yellow;
-    }
-  </style>
-</head>
-
-<body>
-
-<div class="card">
-  <h2>AURA</h2>
-
-  <input id="email" type="email" placeholder="Seu email">
-  <input id="password" type="password" placeholder="Sua senha">
-
-  <button class="btn-primary" onclick="login()">Entrar</button>
-  <button class="btn-secondary" onclick="signup()">Criar conta</button>
-
-  <p>ou</p>
-
-  <button class="btn-google" onclick="loginWithGoogle()">Entrar com Google</button>
-
-  <p onclick="recoverPassword()" style="cursor:pointer;">Esqueci minha senha</p>
-
-  <p id="msg"></p>
-</div>
-
-<!-- IMPORTANTE -->
-<script type="module" src="js/supabase.js"></script>
-<script src="js/auth.js"></script>
-</body>
-</html>
+  setMessage('Login realizado com sucesso.')
+  window.location.href = '/'
+}
