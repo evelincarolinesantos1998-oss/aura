@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURA Login</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: #fff;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: #121933;
+      padding: 28px;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 28px;
+      text-align: center;
+    }
+
+    p.sub {
+      text-align: center;
+      color: #b8c0e0;
+      margin-bottom: 24px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #d7def7;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #2a3568;
+      background: #0f1530;
+      color: #fff;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px 14px;
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .btn-primary {
+      background: #6ea8fe;
+      color: #08101f;
+    }
+
+    .btn-secondary {
+      background: #1d2852;
+      color: #fff;
+    }
+
+    .btn-google {
+      background: #fff;
+      color: #111;
+    }
+
+    .links {
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .links a {
+      color: #9dc2ff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    #msg {
+      margin-top: 14px;
+      text-align: center;
+      min-height: 22px;
+      color: #ffd37a;
+    }
+
+    .divider {
+      margin: 18px 0;
+      text-align: center;
+      color: #8fa0d0;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>AURA</h1>
+    <p class="sub">Entre na sua conta para acessar sua área financeira.</p>
+
+    <div class="field">
+      <label for="email">E-mail</label>
+      <input id="email" type="email" placeholder="seuemail@exemplo.com" />
+    </div>
+
+    <div class="field">
+      <label for="password">Senha</label>
+      <input id="password" type="password" placeholder="Digite sua senha" />
+    </div>
+
+    <button class="btn-primary" onclick="login()">Entrar</button>
+    <button class="btn-secondary" onclick="signup()">Criar conta</button>
+
+    <div class="divider">ou</div>
+
+    <button class="btn-google" onclick="loginWithGoogle()">Entrar com Google</button>
+
+    <div class="links">
+      <a href="#" onclick="recoverPassword(); return false;">Esqueci minha senha</a>
+    </div>
+
+    <p id="msg"></p>
+  </div>
+
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>
