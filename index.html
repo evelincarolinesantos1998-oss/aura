@@ -513,7 +513,7 @@
       </div>
       <div class="calc-grid" style="margin-top:12px; grid-template-columns:repeat(3, minmax(0,1fr));">
         <button class="btn btn-green" onclick="runGoalSim()">Calcular</button>
-        <button class="btn btn-gold" onclick="suggestGoalStrategy()">Sugerir estratégia</button>
+        <button id="btn-suggest-strategy" class="btn btn-gold" onclick="suggestGoalStrategy()">Sugerir estratégia</button>
         <button class="btn btn-ghost" style="color:var(--text-color); border:1px solid var(--table-border); background:var(--card-bg);" onclick="applySuggestedInvestment()" id="apply-suggestion-btn">Lançar sugestão na tabela</button>
       </div>
       <div id="goal-result-box" class="hidden" style="margin-top:12px; text-align:center; color:var(--income); font-weight:800;">
