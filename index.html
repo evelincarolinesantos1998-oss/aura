@@ -1547,30 +1547,35 @@ function addCategory(name, type, val) {
       refreshOfficialRates(false);
     });
   </script>
- <script type="module">
+<script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const supabase = createClient(
   'https://brdxiakrjriqljxivsyi.supabase.co',
-  'sb_publishable_5Do2c9RtxKSpZmyOD0aLKQ_C_lHgyZD'
+  'SUA_PUBLISHABLE_KEY_AQUI'
 )
 
 window.supabaseClient = supabase
 
-const { data, error } = await supabase.auth.getSession()
+const sessionResponse = await supabase.auth.getSession()
+const sessionData = sessionResponse.data
+const sessionError = sessionResponse.error
 
-if (error || !data.session) {
+if (sessionError || !sessionData.session) {
   window.location.href = 'entrar.html'
 }
 
-const user = data.session.user
+const user = sessionData.session.user
 window.currentUser = user
 
-const { data: profile, error: profileError } = await supabase
+const profileResponse = await supabase
   .from('profiles')
   .select('*')
   .eq('user_id', user.id)
   .single()
+
+const profile = profileResponse.data
+const profileError = profileResponse.error
 
 if (profileError || !profile) {
   console.error('Erro ao buscar profile:', profileError)
@@ -1606,25 +1611,11 @@ if (window.currentPlan === 'free') {
   lockButton('apply-suggestion-btn', 'Recurso exclusivo do plano Pro.')
   lockButton('btn-suggest-strategy', 'Estratégia automática disponível apenas no plano Pro.')
 
-  const compareButtons = Array.from(document.querySelectorAll('button'))
-    .filter(btn => btn.textContent.includes('Comparar rendimentos'))
-
-  compareButtons.forEach(btn => {
-    btn.disabled = true
-    btn.style.opacity = '0.6'
-    btn.title = 'Comparação completa disponível apenas no plano Pro.'
-    btn.addEventListener('click', function (e) {
-      e.preventDefault()
-      e.stopPropagation()
-      alert('Comparação completa disponível apenas no plano Pro.')
-    }, true)
+  const compareButtons = Array.from(document.querySelectorAll('button')).filter(function (btn) {
+    return btn.textContent.includes('Comparar rendimentos')
   })
-}
 
-  const compareButtons = Array.from(document.querySelectorAll('button'))
-    .filter(btn => btn.textContent.includes('Comparar rendimentos'))
-
-  compareButtons.forEach(btn => {
+  compareButtons.forEach(function (btn) {
     btn.disabled = true
     btn.style.opacity = '0.6'
     btn.title = 'Comparação completa disponível apenas no plano Pro.'
